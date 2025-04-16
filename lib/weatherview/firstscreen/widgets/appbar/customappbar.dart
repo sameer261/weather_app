@@ -1,7 +1,9 @@
 // lib/widgets/custom_top_bar.dart
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:weather_app/utils/color.dart';
+import 'package:weather_app/weatherview/searchscreen/location_search_screen.dart';
 
 class CustomTopBar extends StatelessWidget {
   const CustomTopBar({super.key});
@@ -15,7 +17,16 @@ class CustomTopBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // Left Icon (Search)
-            Image.asset('assets/images/search.png', width: 24, height: 24),
+            GestureDetector(
+              onTap: () {
+                Get.to(() => const LocationSearchScreen());
+              },
+              child: Image.asset(
+                'assets/images/search.png',
+                width: 24,
+                height: 24,
+              ),
+            ),
 
             // Center 4 Dots (rounded rectangles)
             Row(

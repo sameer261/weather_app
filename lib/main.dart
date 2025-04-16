@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       home: firstscreen(),
+      debugShowCheckedModeBanner: false,
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
