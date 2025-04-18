@@ -9,11 +9,10 @@ class LocationSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController locationController = TextEditingController();
-    final WeatherController weatherController = Get.put(WeatherController());
+    final WeatherController weatherController = Get.find<WeatherController>();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
       body: Container(
@@ -47,6 +46,13 @@ class LocationSearchScreen extends StatelessWidget {
               ),
               child: TextField(
                 controller: locationController,
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    weatherController.searchLocation(value);
+                  } else {
+                    weatherController.locationSuggestions.clear();
+                  }
+                },
                 style: const TextStyle(color: Colors.white, fontSize: 16),
                 decoration: InputDecoration(
                   hintText: "Enter city or location",
@@ -61,10 +67,39 @@ class LocationSearchScreen extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 10),
+
+            // Suggestions List
+            Obx(() {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: weatherController.locationSuggestions.length,
+                  itemBuilder: (context, index) {
+                    final loc = weatherController.locationSuggestions[index];
+                    final cityName = loc['name'] ?? '';
+                    final country = loc['country'] ?? '';
+                    final state = loc['state'] ?? '';
+
+                    return ListTile(
+                      title: Text(
+                        "$cityName, ${state.isNotEmpty ? "$state, " : ""}$country",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        weatherController.updateLocationAndWeather(loc);
+                        Get.back(); // Go back to previous screen
+                      },
+                    );
+                  },
+                ),
+              );
+            }),
+
+            const SizedBox(height: 10),
+
             // Use current location (optional)
             TextButton.icon(
               onPressed: () {
-                // Your current location logic here
                 weatherController.useCurrentLocation();
                 Get.back();
               },
@@ -74,49 +109,6 @@ class LocationSearchScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               style: TextButton.styleFrom(foregroundColor: Colors.white),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Get Weather button
-            GestureDetector(
-              onTap: () {
-                final loc = locationController.text.trim();
-                if (loc.isNotEmpty) {
-                  weatherController.updateLocation(loc);
-                  Get.back();
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 18),
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFFBCA1C), Color(0xFFD6996B)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      offset: const Offset(0, 5),
-                      blurRadius: 15,
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Text(
-                    "Get Weather",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-              ),
             ),
           ],
         ),

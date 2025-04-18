@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/utils/color.dart';
-import 'package:weather_app/weatherview/firstscreen/widgets/appbar/customappbar.dart';
 import 'package:weather_app/weatherview/searchscreen/location_search_screen_controller.dart';
+import 'package:weather_app/weatherview/firstscreen/widgets/appbar/customappbar.dart';
 
-// ignore: camel_case_types
-class firstscreen extends StatelessWidget {
-  firstscreen({super.key});
+class FirstScreen extends StatelessWidget {
+  FirstScreen({super.key});
 
   final WeatherController weatherController = Get.put(WeatherController());
 
@@ -30,14 +29,27 @@ class firstscreen extends StatelessWidget {
                       weatherController.location.value,
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontWeight: FontWeight.w500, // Simulated bold
-                        fontSize: 20, // Custom size
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
                       ),
                     ),
                   ),
                 ],
               ),
-            ), // This keeps the gradient visible in the remaining area
+            ),
+            SizedBox(height: 20),
+            Obx(() {
+              if (weatherController.weatherInfo.value.isEmpty) {
+                return SizedBox();
+              }
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  weatherController.weatherInfo.value,
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              );
+            }),
           ],
         ),
       ),

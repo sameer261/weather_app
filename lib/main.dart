@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: firstscreen(),
+      home: FirstScreen(),
       debugShowCheckedModeBanner: false,
       // This trailing comma makes auto-formatting nicer for build methods.
     );
