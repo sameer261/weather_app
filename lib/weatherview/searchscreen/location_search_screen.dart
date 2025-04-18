@@ -69,35 +69,7 @@ class LocationSearchScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // Suggestions List
-            Obx(() {
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: weatherController.locationSuggestions.length,
-                  itemBuilder: (context, index) {
-                    final loc = weatherController.locationSuggestions[index];
-                    final cityName = loc['name'] ?? '';
-                    final country = loc['country'] ?? '';
-                    final state = loc['state'] ?? '';
-
-                    return ListTile(
-                      title: Text(
-                        "$cityName, ${state.isNotEmpty ? "$state, " : ""}$country",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      onTap: () {
-                        weatherController.updateLocationAndWeather(loc);
-                        Get.back(); // Go back to previous screen
-                      },
-                    );
-                  },
-                ),
-              );
-            }),
-
-            const SizedBox(height: 10),
-
-            // Use current location (optional)
+            // Use current location button
             TextButton.icon(
               onPressed: () {
                 weatherController.useCurrentLocation();
@@ -110,6 +82,40 @@ class LocationSearchScreen extends StatelessWidget {
               ),
               style: TextButton.styleFrom(foregroundColor: Colors.white),
             ),
+
+            const SizedBox(height: 10),
+
+            // Suggestions List
+            Obx(() {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: weatherController.locationSuggestions.length,
+                  itemBuilder: (context, index) {
+                    final loc = weatherController.locationSuggestions[index];
+                    final cityName = loc['name'] ?? '';
+                    final state = loc['state'] ?? '';
+                    final displayName =
+                        state.isNotEmpty ? "$cityName, $state" : cityName;
+
+                    return ListTile(
+                      title: Text(
+                        displayName,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        weatherController.location.value = displayName;
+                        weatherController.getWeather(
+                          displayName,
+                          loc['lat'],
+                          loc['lon'],
+                        );
+                        Get.back();
+                      },
+                    );
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),
