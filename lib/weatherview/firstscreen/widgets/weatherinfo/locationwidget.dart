@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/weatherinfo/weatherinfo_controller.dart';
-import 'package:weather_app/weatherview/searchscreen/location_search_screen_controller.dart';
 
 class LocationWidget extends StatelessWidget {
   final WeatherInfoController weatherController = Get.put(

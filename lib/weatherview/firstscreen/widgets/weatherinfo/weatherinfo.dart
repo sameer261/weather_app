@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/utils/color.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/weatherinfo/weatherinfo_controller.dart';
-import 'package:weather_app/weatherview/searchscreen/location_search_screen_controller.dart';
 
 class WeatherInfoWidget extends StatelessWidget {
   final WeatherInfoController weatherController = Get.put(

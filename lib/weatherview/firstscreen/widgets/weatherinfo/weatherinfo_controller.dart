@@ -6,10 +6,17 @@ class WeatherInfoController extends GetxController {
   RxString location = ''.obs;
   RxString weatherInfo = ''.obs;
   RxString weatherIconPath = ''.obs;
+  RxBool isWeatherLoading = false.obs; // <-- Added
+
+  RxDouble humidity = 0.0.obs;
+  RxDouble windSpeed = 0.0.obs;
+  RxDouble rainfall = 0.0.obs; // For rainfall
 
   final String apiKey = '6fbcdad70318ecd7f0a756be6ff23b21';
 
   Future<void> getWeather(String city, double lat, double lon) async {
+    isWeatherLoading.value = true; // <-- Start loading
+
     final url =
         'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric';
 
@@ -23,6 +30,14 @@ class WeatherInfoController extends GetxController {
         double temp = weatherData['main']['temp'].toDouble();
         int roundedTemp = temp.round();
 
+        humidity.value = weatherData['main']['humidity'].toDouble();
+        windSpeed.value = weatherData['wind']['speed'].toDouble();
+        // Assuming 'rain' key exists for rainfall, if not, handle the absence.
+        rainfall.value =
+            weatherData['rain'] != null
+                ? weatherData['rain']['1h'] ?? 0.0
+                : 0.0;
+
         weatherInfo.value = '$roundedTemp°C\n$description';
         weatherIconPath.value = iconPath;
       } else {
@@ -33,6 +48,8 @@ class WeatherInfoController extends GetxController {
       print('Error fetching weather data: $e');
       weatherInfo.value = 'Error fetching weather data';
       weatherIconPath.value = '';
+    } finally {
+      isWeatherLoading.value = false; // <-- Stop loading
     }
   }
 

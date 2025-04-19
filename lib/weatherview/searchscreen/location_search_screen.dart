@@ -13,7 +13,8 @@ class LocationSearchScreen extends StatelessWidget {
     final LocationSearchScreenController locationControllerGet = Get.put(
       LocationSearchScreenController(),
     );
-    Get.find<WeatherInfoController>();
+    final WeatherInfoController weatherController =
+        Get.find<WeatherInfoController>();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -89,8 +90,16 @@ class LocationSearchScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // Suggestions List
+            // Suggestions or loading
             Obx(() {
+              if (weatherController.isWeatherLoading.value) {
+                return const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(color: Colors.white),
+                  ),
+                );
+              }
+
               return Expanded(
                 child: ListView.builder(
                   itemCount: locationControllerGet.locationSuggestions.length,
@@ -107,9 +116,16 @@ class LocationSearchScreen extends StatelessWidget {
                         displayName,
                         style: const TextStyle(color: Colors.white),
                       ),
-                      onTap: () {
+                      onTap: () async {
+                        weatherController.isWeatherLoading.value = true;
                         locationControllerGet.updateLocationAndWeather(loc);
-                        Get.back();
+
+                        // Wait for weather loading to finish then go back
+                        ever(weatherController.isWeatherLoading, (loading) {
+                          if (loading == false) {
+                            Get.back();
+                          }
+                        });
                       },
                     );
                   },
