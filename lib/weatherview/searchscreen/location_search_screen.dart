@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/utils/color.dart';
+import 'package:weather_app/weatherview/firstscreen/widgets/weatherinfo/weatherinfo_controller.dart';
 import 'package:weather_app/weatherview/searchscreen/location_search_screen_controller.dart';
 
 class LocationSearchScreen extends StatelessWidget {
@@ -9,7 +10,10 @@ class LocationSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextEditingController locationController = TextEditingController();
-    final WeatherController weatherController = Get.find<WeatherController>();
+    final LocationSearchScreenController locationControllerGet = Get.put(
+      LocationSearchScreenController(),
+    );
+    Get.find<WeatherInfoController>();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -48,18 +52,18 @@ class LocationSearchScreen extends StatelessWidget {
                 controller: locationController,
                 onChanged: (value) {
                   if (value.isNotEmpty) {
-                    weatherController.searchLocation(value);
+                    locationControllerGet.searchLocation(value);
                   } else {
-                    weatherController.locationSuggestions.clear();
+                    locationControllerGet.locationSuggestions.clear();
                   }
                 },
                 style: const TextStyle(color: Colors.white, fontSize: 16),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Enter city or location",
                   hintStyle: TextStyle(color: Colors.white70),
                   prefixIcon: Icon(Icons.location_on, color: Colors.white),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
+                  contentPadding: EdgeInsets.symmetric(
                     vertical: 18,
                     horizontal: 12,
                   ),
@@ -72,7 +76,7 @@ class LocationSearchScreen extends StatelessWidget {
             // Use current location button
             TextButton.icon(
               onPressed: () {
-                weatherController.useCurrentLocation();
+                locationControllerGet.useCurrentLocation();
                 Get.back();
               },
               icon: const Icon(Icons.my_location, color: Colors.white),
@@ -89,9 +93,10 @@ class LocationSearchScreen extends StatelessWidget {
             Obx(() {
               return Expanded(
                 child: ListView.builder(
-                  itemCount: weatherController.locationSuggestions.length,
+                  itemCount: locationControllerGet.locationSuggestions.length,
                   itemBuilder: (context, index) {
-                    final loc = weatherController.locationSuggestions[index];
+                    final loc =
+                        locationControllerGet.locationSuggestions[index];
                     final cityName = loc['name'] ?? '';
                     final state = loc['state'] ?? '';
                     final displayName =
@@ -103,12 +108,7 @@ class LocationSearchScreen extends StatelessWidget {
                         style: const TextStyle(color: Colors.white),
                       ),
                       onTap: () {
-                        weatherController.location.value = displayName;
-                        weatherController.getWeather(
-                          displayName,
-                          loc['lat'],
-                          loc['lon'],
-                        );
+                        locationControllerGet.updateLocationAndWeather(loc);
                         Get.back();
                       },
                     );
