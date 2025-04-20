@@ -12,8 +12,6 @@ class WeatherInfoController extends GetxController {
   RxDouble windSpeed = 0.0.obs;
   RxDouble rainfall = 0.0.obs;
 
-  var hourlyWeatherData = <Map<String, dynamic>>[].obs;
-
   final String apiKey = '6fbcdad70318ecd7f0a756be6ff23b21';
 
   Future<void> getWeather(String city, double lat, double lon) async {
@@ -21,9 +19,6 @@ class WeatherInfoController extends GetxController {
 
     final currentUrl =
         'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric';
-
-    final hourlyUrl =
-        'https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&exclude=minutely,daily,alerts&appid=$apiKey&units=metric';
 
     try {
       // --- Current Weather ---
@@ -48,27 +43,6 @@ class WeatherInfoController extends GetxController {
       } else {
         weatherInfo.value = 'Failed to load weather data';
         weatherIconPath.value = '';
-      }
-
-      // --- Hourly Weather ---
-      final hourlyResponse = await http.get(Uri.parse(hourlyUrl));
-      if (hourlyResponse.statusCode == 200) {
-        final data = json.decode(hourlyResponse.body);
-        hourlyWeatherData.value = List<Map<String, dynamic>>.from(
-          (data['hourly'] as List)
-              .take(12)
-              .map(
-                (hour) => {
-                  'time':
-                      DateTime.fromMillisecondsSinceEpoch(
-                        hour['dt'] * 1000,
-                      ).hour.toString().padLeft(2, '0') +
-                      ":00",
-                  'temp': hour['temp'].toStringAsFixed(0),
-                  'description': hour['weather'][0]['main'],
-                },
-              ),
-        );
       }
     } catch (e) {
       print('Error fetching weather data: $e');

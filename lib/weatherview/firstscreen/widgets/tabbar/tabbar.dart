@@ -15,7 +15,6 @@ class CustomTabBar extends StatelessWidget {
       () => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tabs + 7 Days Button
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -32,7 +31,7 @@ class CustomTabBar extends StatelessWidget {
                   onTap: () async {
                     tabController.changeTab(2);
                     await Get.to(() => sevendaysWeatherScreen());
-                    tabController.changeTab(0); // Reset tab
+                    tabController.changeTab(0); // Reset tab to Today
                   },
                   child: Row(
                     children: [
@@ -59,81 +58,81 @@ class CustomTabBar extends StatelessWidget {
 
           SizedBox(height: 16),
 
-          // Tab Content
+          // Tab content
           Builder(
             builder: (_) {
               final selectedIndex = tabController.selectedIndex.value;
               if (selectedIndex == 0) {
-                // Today Tab - Show Hourly Forecast
-                return Obx(() {
-                  final hourlyData = weatherController.hourlyWeatherData;
+                return Text('no');
+                // Obx(() {
+                //   final hourlyData = weatherController.hourlyWeatherData;
 
-                  if (weatherController.isWeatherLoading.value) {
-                    return Center(child: CircularProgressIndicator());
-                  }
+                //   if (weatherController.isWeatherLoading.value) {
+                //     return Center(child: CircularProgressIndicator());
+                //   }
 
-                  if (hourlyData.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Text(
-                          "No hourly forecast data available",
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    );
-                  }
+                //   if (hourlyData.isEmpty) {
+                //     return Center(
+                //       child: Padding(
+                //         padding: const EdgeInsets.only(top: 16.0),
+                //         child: Text(
+                //           "No hourly forecast data available",
+                //           style: TextStyle(fontSize: 14),
+                //         ),
+                //       ),
+                //     );
+                //   }
 
-                  return SizedBox(
-                    height: 100,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: hourlyData.length,
-                      separatorBuilder: (_, __) => SizedBox(width: 12),
-                      itemBuilder: (_, index) {
-                        final item = hourlyData[index];
-                        return Container(
-                          width: 70,
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                item['time'],
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                "${item['temp']}°C",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                item['description'],
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                });
+                //   return SizedBox(
+                //     height: 100,
+                //     child: ListView.separated(
+                //       scrollDirection: Axis.horizontal,
+                //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                //       itemCount: hourlyData.length,
+                //       separatorBuilder: (_, __) => SizedBox(width: 12),
+                //       itemBuilder: (_, index) {
+                //         final item = hourlyData[index];
+                //         return Container(
+                //           width: 70,
+                //           padding: EdgeInsets.all(8),
+                //           decoration: BoxDecoration(
+                //             color: Colors.white.withOpacity(0.1),
+                //             borderRadius: BorderRadius.circular(12),
+                //           ),
+                //           child: Column(
+                //             mainAxisAlignment: MainAxisAlignment.center,
+                //             children: [
+                //               Text(
+                //                 item['time'],
+                //                 style: TextStyle(
+                //                   fontSize: 10,
+                //                   color: Colors.white,
+                //                 ),
+                //               ),
+                //               SizedBox(height: 4),
+                //               Text(
+                //                 "${item['temp']}°C",
+                //                 style: TextStyle(
+                //                   fontSize: 14,
+                //                   fontWeight: FontWeight.bold,
+                //                   color: Colors.white,
+                //                 ),
+                //               ),
+                //               SizedBox(height: 4),
+                //               Text(
+                //                 item['description'],
+                //                 style: TextStyle(
+                //                   fontSize: 10,
+                //                   color: Colors.white70,
+                //                 ),
+                //               ),
+                //             ],
+                //           ),
+                //         );
+                //       },
+                //     ),
+                //   );
+                // });
               } else if (selectedIndex == 1) {
                 return Center(
                   child: Text(
@@ -142,7 +141,7 @@ class CustomTabBar extends StatelessWidget {
                   ),
                 );
               } else {
-                return SizedBox.shrink(); // For 7 days screen tab
+                return SizedBox.shrink(); // 7 days screen tab
               }
             },
           ),
