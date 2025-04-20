@@ -78,16 +78,16 @@ class CustomTabBar extends StatelessWidget {
                 final selectedIndex = tabController.selectedIndex.value;
                 if (selectedIndex == 0) {
                   return Text(
-                    "Today Center",
+                    "Today's forecast will be shown here",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   );
                 } else if (selectedIndex == 1) {
                   return Text(
-                    "Tomorrow Center",
+                    "Tomorrow's forecast will be shown here",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   );
                 } else {
-                  return SizedBox.shrink(); // No content for index 2
+                  return SizedBox.shrink();
                 }
               },
             ),

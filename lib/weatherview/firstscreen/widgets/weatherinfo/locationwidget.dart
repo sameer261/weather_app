@@ -10,9 +10,8 @@ class LocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String formattedDate = DateFormat(
-      'EEE, MMM d',
-    ).format(DateTime.now());
+    final now = DateTime.now();
+    final String formattedDate = DateFormat('EEE, MMM d').format(now);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -46,14 +45,18 @@ class LocationWidget extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 6),
-            Text(
-              formattedDate,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                fontSize: 10,
-                color: Color(0xff9A938C),
-              ),
+            Row(
+              children: [
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
+                    fontSize: 10,
+                    color: Color(0xff9A938C),
+                  ),
+                ),
+              ],
             ),
           ],
         );

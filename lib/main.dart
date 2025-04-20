@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get.dart';
 import 'package:weather_app/weatherview/firstscreen/Weather_view.dart';
 
 void main() {
