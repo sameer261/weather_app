@@ -1,6 +1,6 @@
-// location_widget.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/weatherinfo/weatherinfo_controller.dart';
 
 class LocationWidget extends StatelessWidget {
@@ -10,6 +10,10 @@ class LocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String formattedDate = DateFormat(
+      'EEE, MMM d',
+    ).format(DateTime.now());
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       child: Obx(() {
@@ -26,8 +30,8 @@ class LocationWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
-                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                fontSize: 26,
                 color: Color(0xff313341),
               ),
             ),
@@ -36,11 +40,21 @@ class LocationWidget extends StatelessWidget {
                 state,
                 style: const TextStyle(
                   fontFamily: 'Inter',
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 26,
                   color: Color(0xff313341),
                 ),
               ),
+            const SizedBox(height: 6),
+            Text(
+              formattedDate,
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w400,
+                fontSize: 10,
+                color: Color(0xff9A938C),
+              ),
+            ),
           ],
         );
       }),

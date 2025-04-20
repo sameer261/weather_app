@@ -32,7 +32,7 @@ class WeatherDetailsWidget extends StatelessWidget {
 
               paddingBottom: 1,
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 8),
             _buildWeatherContainer(
               svgPath: 'assets/images/wind.svg',
               title: 'Wind Speed',
@@ -41,7 +41,7 @@ class WeatherDetailsWidget extends StatelessWidget {
               iconHeight: 18,
               paddingTop: 3,
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 8),
             _buildWeatherContainer(
               svgPath: 'assets/images/humidity.svg',
               title: 'Humidity',
