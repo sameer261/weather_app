@@ -29,7 +29,7 @@ class WeatherInfoWidget extends StatelessWidget {
           children: [
             if (iconPath.isNotEmpty)
               SvgPicture.asset(iconPath, width: 120, height: 120),
-            SizedBox(width: 15),
+            SizedBox(width: 18),
             if (weatherText.isNotEmpty)
               Expanded(
                 child: Column(
