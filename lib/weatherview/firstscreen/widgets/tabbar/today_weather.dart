@@ -35,11 +35,13 @@ class HourlyWeatherWidget extends StatelessWidget {
             final icon = data['icon'];
 
             return Container(
-              width: 60,
-              margin: const EdgeInsets.symmetric(horizontal: 8),
+              width: 40,
+              height: 56,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(20),
               ),
               padding: const EdgeInsets.all(8),
               child: Column(
@@ -47,18 +49,18 @@ class HourlyWeatherWidget extends StatelessWidget {
                 children: [
                   Text(
                     "${time.hour}:00",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black, fontSize: 7),
                   ),
-                  SizedBox(height: 8),
+
                   Image.network(
                     "https://openweathermap.org/img/wn/$icon@2x.png",
-                    width: 40,
-                    height: 40,
+                    width: 24,
+                    height: 24,
                   ),
 
                   Text(
                     "${temp.toStringAsFixed(0)}°C",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black, fontSize: 7),
                   ),
                 ],
               ),

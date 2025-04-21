@@ -14,22 +14,32 @@ class HourlyWeatherController extends GetxController {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final now = DateTime.now();
+
+        // Get timezone offset from API response (in seconds)
+        final int timezoneOffsetSeconds = data['city']['timezone'];
+        final Duration timezoneOffset = Duration(
+          seconds: timezoneOffsetSeconds,
+        );
+
+        // Get current time in that location's local time
+        final DateTime now = DateTime.now().toUtc().add(timezoneOffset);
 
         todayHourlyData.value =
             (data['list'] as List)
-                .map(
-                  (e) => {
-                    "time": DateTime.parse(e['dt_txt']),
+                .map((e) {
+                  final DateTime forecastUtc = DateTime.parse(e['dt_txt']);
+                  final DateTime localTime = forecastUtc.add(timezoneOffset);
+                  return {
+                    "time": localTime,
                     "temp": e['main']['temp'],
                     "icon": e['weather'][0]['icon'],
-                  },
-                )
+                  };
+                })
                 .where(
                   (entry) =>
                       entry["time"].day == now.day &&
                       entry["time"].isAfter(now),
-                ) // only from now onwards today
+                )
                 .toList();
       } else {
         todayHourlyData.clear();
