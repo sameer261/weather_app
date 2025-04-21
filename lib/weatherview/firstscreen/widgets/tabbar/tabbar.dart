@@ -21,13 +21,7 @@ class CustomTabBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    _buildTab("Today", 0),
-                    SizedBox(width: 12),
-                    _buildTab("Tomorrow", 1),
-                  ],
-                ),
+                Row(children: [_buildTab("Today", 0)]),
                 GestureDetector(
                   onTap: () async {
                     tabController.changeTab(2);
@@ -68,15 +62,8 @@ class CustomTabBar extends StatelessWidget {
                   lat: weatherController.latitude.value,
                   lon: weatherController.longitude.value,
                 );
-              } else if (selectedIndex == 1) {
-                return Center(
-                  child: Text(
-                    "Tomorrow's forecast will be shown here",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                );
               } else {
-                return SizedBox.shrink(); // 7 days screen tab
+                return SizedBox.shrink(); // Just in case
               }
             },
           ),
