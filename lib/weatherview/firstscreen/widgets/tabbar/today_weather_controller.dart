@@ -22,7 +22,6 @@ class HourlyWeatherController extends GetxController {
           seconds: timezoneOffsetSeconds,
         );
         final DateTime now = DateTime.now().toUtc().add(timezoneOffset);
-
         todayHourlyData.value =
             (data['list'] as List)
                 .map((e) {
@@ -31,7 +30,8 @@ class HourlyWeatherController extends GetxController {
                   return {
                     "time": localTime,
                     "temp": e['main']['temp'],
-                    "icon": e['weather'][0]['icon'],
+                    "description": e['weather'][0]['description'],
+                    // add this
                   };
                 })
                 .where(
@@ -40,6 +40,23 @@ class HourlyWeatherController extends GetxController {
                       entry["time"].isAfter(now),
                 )
                 .toList();
+        // todayHourlyData.value =
+        //     (data['list'] as List)
+        //         .map((e) {
+        //           final DateTime forecastUtc = DateTime.parse(e['dt_txt']);
+        //           final DateTime localTime = forecastUtc.add(timezoneOffset);
+        //           return {
+        //             "time": localTime,
+        //             "temp": e['main']['temp'],
+        //             "icon": e['weather'][0]['icon'],
+        //           };
+        //         })
+        //         .where(
+        //           (entry) =>
+        //               entry["time"].day == now.day &&
+        //               entry["time"].isAfter(now),
+        //         )
+        //         .toList();
       } else {
         todayHourlyData.clear();
       }

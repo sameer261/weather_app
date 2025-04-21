@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/tabbar/today_weather_controller.dart';
 
@@ -10,6 +11,49 @@ class HourlyWeatherWidget extends StatelessWidget {
     Get.lazyPut(() => HourlyWeatherController());
     final controller = Get.find<HourlyWeatherController>();
     controller.fetchTodayHourlyWeather(lat, lon);
+  }
+
+  String getIconPathFromDescription(String description, String iconCode) {
+    description = description.toLowerCase();
+    bool isNight = iconCode.contains('n');
+
+    if (description.contains("clear")) {
+      return isNight ? 'assets/images/moon.svg' : 'assets/images/sun.svg';
+    }
+
+    if (description.contains("cloud") && description.contains("sun")) {
+      return isNight
+          ? 'assets/images/moon_cloud.svg'
+          : 'assets/images/sun_cloud.svg';
+    }
+
+    if (description.contains("cloud") && description.contains("rain")) {
+      return 'assets/images/cloud_with_sun_rain.svg';
+    }
+
+    if (description.contains("cloud")) {
+      return isNight
+          ? 'assets/images/moon_cloud.svg'
+          : 'assets/images/cloud.svg';
+    }
+
+    if (description.contains("rain")) {
+      return 'assets/images/cloud_rain.svg';
+    }
+
+    if (description.contains("thunderstorm")) {
+      return 'assets/images/cloud_with_sun_rain.svg';
+    }
+
+    if (description.contains("mist") || description.contains("fog")) {
+      return isNight
+          ? 'assets/images/moon_cloud.svg'
+          : 'assets/images/cloud.svg';
+    }
+
+    return isNight
+        ? 'assets/images/moon_cloud.svg'
+        : 'assets/images/cloud.svg'; // fallback
   }
 
   @override
@@ -35,7 +79,10 @@ class HourlyWeatherWidget extends StatelessWidget {
               final data = controller.todayHourlyData[index];
               final time = data['time'];
               final temp = data['temp'];
-              final icon = data['icon'];
+              final icon = data['icon'] ?? ''; // Ensure icon is not null
+              final description =
+                  data['description'] ?? ''; // Ensure description is not null
+              final assetPath = getIconPathFromDescription(description, icon);
 
               return Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 16),
@@ -51,14 +98,10 @@ class HourlyWeatherWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "${time.hour}:00",
+                        "${time.hour.toString().padLeft(2, '0')}:00",
                         style: TextStyle(color: Colors.black, fontSize: 7),
                       ),
-                      Image.network(
-                        "https://openweathermap.org/img/wn/$icon@2x.png",
-                        width: 24,
-                        height: 24,
-                      ),
+                      SvgPicture.asset(assetPath, width: 24, height: 24),
                       Text(
                         "${temp.toStringAsFixed(0)}°C",
                         style: TextStyle(color: Colors.black, fontSize: 7),
