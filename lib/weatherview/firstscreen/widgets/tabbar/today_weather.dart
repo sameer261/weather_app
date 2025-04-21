@@ -12,17 +12,22 @@ class HourlyWeatherWidget extends StatelessWidget {
     final controller = Get.find<HourlyWeatherController>();
     controller.fetchTodayHourlyWeather(lat, lon);
   }
-
-  String getIconPathFromDescription(String description, String iconCode) {
+  String getIconPathFromDescription(
+    String description,
+    String iconCode,
+    DateTime time,
+  ) {
     description = description.toLowerCase();
-    bool isNight = iconCode.contains('n');
+
+    // Karachi ya user ke location ka local time assume karo yahan
+    bool isNightTime = time.hour < 6 || time.hour >= 20; // 8pm se 6am raat
 
     if (description.contains("clear")) {
-      return isNight ? 'assets/images/moon.svg' : 'assets/images/sun.svg';
+      return isNightTime ? 'assets/images/moon.svg' : 'assets/images/sun.svg';
     }
 
     if (description.contains("cloud") && description.contains("sun")) {
-      return isNight
+      return isNightTime
           ? 'assets/images/moon_cloud.svg'
           : 'assets/images/sun_cloud.svg';
     }
@@ -32,7 +37,7 @@ class HourlyWeatherWidget extends StatelessWidget {
     }
 
     if (description.contains("cloud")) {
-      return isNight
+      return isNightTime
           ? 'assets/images/moon_cloud.svg'
           : 'assets/images/cloud.svg';
     }
@@ -46,12 +51,12 @@ class HourlyWeatherWidget extends StatelessWidget {
     }
 
     if (description.contains("mist") || description.contains("fog")) {
-      return isNight
+      return isNightTime
           ? 'assets/images/moon_cloud.svg'
           : 'assets/images/cloud.svg';
     }
 
-    return isNight
+    return isNightTime
         ? 'assets/images/moon_cloud.svg'
         : 'assets/images/cloud.svg'; // fallback
   }
@@ -82,7 +87,11 @@ class HourlyWeatherWidget extends StatelessWidget {
               final icon = data['icon'] ?? ''; // Ensure icon is not null
               final description =
                   data['description'] ?? ''; // Ensure description is not null
-              final assetPath = getIconPathFromDescription(description, icon);
+              final assetPath = getIconPathFromDescription(
+                description,
+                icon,
+                time,
+              );
 
               return Padding(
                 padding: const EdgeInsets.only(top: 16, bottom: 16),
