@@ -6,7 +6,7 @@ class HourlyWeatherWidget extends StatelessWidget {
   final double lat;
   final double lon;
 
-  HourlyWeatherWidget({required this.lat, required this.lon}) {
+  HourlyWeatherWidget({super.key, required this.lat, required this.lon}) {
     Get.lazyPut(() => HourlyWeatherController());
     final controller = Get.find<HourlyWeatherController>();
     controller.fetchTodayHourlyWeather(lat, lon);
@@ -19,7 +19,7 @@ class HourlyWeatherWidget extends StatelessWidget {
       if (controller.todayHourlyData.isEmpty) {
         return Padding(
           padding: const EdgeInsets.all(16),
-          child: Text("No hourly data available."),
+          child: Center(child: Text("No hourly data available.")),
         );
       }
 

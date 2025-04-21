@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:weather_app/weatherview/firstscreen/widgets/tabbar/today_weather_controller.dart';
+
 class WeatherInfoController extends GetxController {
   RxString location = ''.obs;
   RxString weatherInfo = ''.obs;
@@ -19,7 +21,8 @@ class WeatherInfoController extends GetxController {
 
   Future<void> getWeather(String city, double lat, double lon) async {
     isWeatherLoading.value = true;
-
+    final hourlyController = Get.find<HourlyWeatherController>();
+    await hourlyController.fetchTodayHourlyWeather(lat, lon);
     this.latitude.value = lat;
     this.longitude.value = lon;
 
