@@ -57,7 +57,7 @@ class CustomTabBar extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 16),
+          SizedBox(height: 5),
 
           // Tab content
           Builder(
