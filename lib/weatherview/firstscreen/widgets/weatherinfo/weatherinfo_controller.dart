@@ -12,10 +12,16 @@ class WeatherInfoController extends GetxController {
   RxDouble windSpeed = 0.0.obs;
   RxDouble rainfall = 0.0.obs;
 
+  RxDouble latitude = 0.0.obs;
+  RxDouble longitude = 0.0.obs;
+
   final String apiKey = '6fbcdad70318ecd7f0a756be6ff23b21';
 
   Future<void> getWeather(String city, double lat, double lon) async {
     isWeatherLoading.value = true;
+
+    this.latitude.value = lat;
+    this.longitude.value = lon;
 
     final currentUrl =
         'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric';

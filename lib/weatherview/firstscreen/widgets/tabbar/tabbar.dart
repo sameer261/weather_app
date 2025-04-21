@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/tabbar/tabbar_controller.dart';
+import 'package:weather_app/weatherview/firstscreen/widgets/tabbar/today_weather.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/weatherinfo/weatherinfo_controller.dart';
 import 'package:weather_app/weatherview/secondscreen/7days_weather_screen.dart';
 
@@ -63,76 +64,10 @@ class CustomTabBar extends StatelessWidget {
             builder: (_) {
               final selectedIndex = tabController.selectedIndex.value;
               if (selectedIndex == 0) {
-                return Text('no');
-                // Obx(() {
-                //   final hourlyData = weatherController.hourlyWeatherData;
-
-                //   if (weatherController.isWeatherLoading.value) {
-                //     return Center(child: CircularProgressIndicator());
-                //   }
-
-                //   if (hourlyData.isEmpty) {
-                //     return Center(
-                //       child: Padding(
-                //         padding: const EdgeInsets.only(top: 16.0),
-                //         child: Text(
-                //           "No hourly forecast data available",
-                //           style: TextStyle(fontSize: 14),
-                //         ),
-                //       ),
-                //     );
-                //   }
-
-                //   return SizedBox(
-                //     height: 100,
-                //     child: ListView.separated(
-                //       scrollDirection: Axis.horizontal,
-                //       padding: const EdgeInsets.symmetric(horizontal: 16),
-                //       itemCount: hourlyData.length,
-                //       separatorBuilder: (_, __) => SizedBox(width: 12),
-                //       itemBuilder: (_, index) {
-                //         final item = hourlyData[index];
-                //         return Container(
-                //           width: 70,
-                //           padding: EdgeInsets.all(8),
-                //           decoration: BoxDecoration(
-                //             color: Colors.white.withOpacity(0.1),
-                //             borderRadius: BorderRadius.circular(12),
-                //           ),
-                //           child: Column(
-                //             mainAxisAlignment: MainAxisAlignment.center,
-                //             children: [
-                //               Text(
-                //                 item['time'],
-                //                 style: TextStyle(
-                //                   fontSize: 10,
-                //                   color: Colors.white,
-                //                 ),
-                //               ),
-                //               SizedBox(height: 4),
-                //               Text(
-                //                 "${item['temp']}°C",
-                //                 style: TextStyle(
-                //                   fontSize: 14,
-                //                   fontWeight: FontWeight.bold,
-                //                   color: Colors.white,
-                //                 ),
-                //               ),
-                //               SizedBox(height: 4),
-                //               Text(
-                //                 item['description'],
-                //                 style: TextStyle(
-                //                   fontSize: 10,
-                //                   color: Colors.white70,
-                //                 ),
-                //               ),
-                //             ],
-                //           ),
-                //         );
-                //       },
-                //     ),
-                //   );
-                // });
+                return HourlyWeatherWidget(
+                  lat: weatherController.latitude.value,
+                  lon: weatherController.longitude.value,
+                );
               } else if (selectedIndex == 1) {
                 return Center(
                   child: Text(
