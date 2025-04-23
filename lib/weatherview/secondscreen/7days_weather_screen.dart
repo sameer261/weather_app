@@ -9,7 +9,6 @@ class sevendaysWeatherScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: radialGradientBackground),
-        child: Column(),
       ),
     );
   }
