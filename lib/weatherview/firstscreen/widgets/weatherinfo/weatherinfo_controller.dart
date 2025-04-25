@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart'; // Import Geolocator
 
 import 'package:weather_app/weatherview/firstscreen/widgets/tabbar/today_weather_controller.dart';
 
@@ -19,6 +20,61 @@ class WeatherInfoController extends GetxController {
 
   final String apiKey = '6fbcdad70318ecd7f0a756be6ff23b21';
 
+  Future<void> getCurrentLocationAndWeather() async {
+    // Request permission for location
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      // Get current position (latitude and longitude)
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Update latitude and longitude
+      this.latitude.value = position.latitude;
+      this.longitude.value = position.longitude;
+
+      // Fetch city and state from lat and lon (you need a reverse geocoding API or method for this)
+      String city = await getCityFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      String state = await getStateFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      // Update the location information
+      updateLocation(city, state);
+
+      // Fetch weather based on current location
+      await getWeather("", position.latitude, position.longitude);
+    } else {
+      // Handle the case where permission is denied
+      print("Location permission denied");
+    }
+  }
+
+  Future<String> getCityFromCoordinates(
+    double latitude,
+    double longitude,
+  ) async {
+    // Use a reverse geocoding service to get the city from latitude and longitude
+    // Here, you can use a service like OpenWeather, Google Maps, etc.
+    // For simplicity, let's assume it's just a placeholder:
+    return "Sample City"; // Replace with actual reverse geocoding logic
+  }
+
+  Future<String> getStateFromCoordinates(
+    double latitude,
+    double longitude,
+  ) async {
+    // Similar to getCityFromCoordinates, this will use reverse geocoding to fetch state
+    return "Sample State"; // Replace with actual reverse geocoding logic
+  }
+
+  // Function to fetch weather data based on latitude and longitude
   Future<void> getWeather(String city, double lat, double lon) async {
     isWeatherLoading.value = true;
     final hourlyController = Get.find<HourlyWeatherController>();
@@ -30,7 +86,6 @@ class WeatherInfoController extends GetxController {
         'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric';
 
     try {
-      // --- Current Weather ---
       final currentResponse = await http.get(Uri.parse(currentUrl));
       if (currentResponse.statusCode == 200) {
         final weatherData = json.decode(currentResponse.body);
@@ -62,6 +117,7 @@ class WeatherInfoController extends GetxController {
     }
   }
 
+  // Function to get the appropriate weather icon for the description
   String getIconForDescription(String description) {
     description = description.toLowerCase();
 
@@ -87,6 +143,7 @@ class WeatherInfoController extends GetxController {
     }
   }
 
+  // Function to update the location based on city and state
   void updateLocation(String city, String state) {
     location.value = state.isNotEmpty ? '$city, $state' : city;
   }

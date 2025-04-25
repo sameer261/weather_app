@@ -76,15 +76,19 @@ class LocationSearchScreen extends StatelessWidget {
 
             // Use current location button
             TextButton.icon(
-              onPressed: () {
-                locationControllerGet.useCurrentLocation();
+              onPressed: () async {
+                await weatherController.getCurrentLocationAndWeather();
                 Get.back();
               },
               icon: const Icon(Icons.my_location, color: Colors.white),
-              label: const Text(
-                "Use Current Location",
-                style: TextStyle(color: Colors.white),
-              ),
+              label: Obx(() {
+                return Text(
+                  weatherController.location.value.isEmpty
+                      ? "Fetching location..."
+                      : weatherController.location.value,
+                  style: const TextStyle(color: Colors.white),
+                );
+              }),
               style: TextButton.styleFrom(foregroundColor: Colors.white),
             ),
 

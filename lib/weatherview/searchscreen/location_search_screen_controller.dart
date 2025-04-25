@@ -44,7 +44,7 @@ class LocationSearchScreenController extends GetxController {
   }
 
   void useCurrentLocation() {
-    weatherInfoController.location.value = "Current Location";
+    weatherInfoController.location.value = "";
     // You can also call weatherInfoController.getWeather(...) with GPS coordinates
   }
 }
