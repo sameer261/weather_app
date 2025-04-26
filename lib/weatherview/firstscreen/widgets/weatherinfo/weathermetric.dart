@@ -13,7 +13,37 @@ class WeatherDetailsWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 16, right: 16),
       child: Obx(() {
         if (weatherController.isWeatherLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          // Loading ke waqt bhi empty containers dikhana
+          return Column(
+            children: [
+              _buildWeatherContainer(
+                svgPath: 'assets/images/rainfall.svg',
+                title: 'Rainfall',
+                value: 'Loading...',
+                iconWidth: 18,
+                iconHeight: 18,
+                paddingBottom: 1,
+              ),
+              SizedBox(height: 8),
+              _buildWeatherContainer(
+                svgPath: 'assets/images/wind.svg',
+                title: 'Wind Speed',
+                value: 'Loading...',
+                iconWidth: 18,
+                iconHeight: 18,
+                paddingTop: 3,
+              ),
+              SizedBox(height: 8),
+              _buildWeatherContainer(
+                svgPath: 'assets/images/humidity.svg',
+                title: 'Humidity',
+                value: 'Loading...',
+                iconWidth: 24,
+                iconHeight: 24,
+                paddingTop: 1,
+              ),
+            ],
+          );
         }
 
         // Fetch data from the controller
@@ -29,7 +59,6 @@ class WeatherDetailsWidget extends StatelessWidget {
               value: rainfall != 0.0 ? '$rainfall cm' : 'N/A',
               iconWidth: 18,
               iconHeight: 18,
-
               paddingBottom: 1,
             ),
             SizedBox(height: 8),

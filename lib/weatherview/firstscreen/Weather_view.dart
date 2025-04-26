@@ -23,19 +23,41 @@ class FirstScreen extends StatelessWidget {
       extendBodyBehindAppBar: true,
       body: Container(
         decoration: BoxDecoration(gradient: radialGradientBackground),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTopBar(),
-            SizedBox(height: 20),
-            LocationWidget(),
-            SizedBox(height: 20),
-            WeatherInfoWidget(),
-            SizedBox(height: 10),
-            WeatherDetailsWidget(),
-            SizedBox(height: 20),
-            CustomTabBar(),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        physics:
+                            constraints.maxHeight < 700
+                                ? BouncingScrollPhysics()
+                                : NeverScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomTopBar(),
+                            SizedBox(height: 20),
+                            LocationWidget(),
+                            SizedBox(height: 20),
+                            WeatherInfoWidget(),
+                            SizedBox(height: 10),
+                            WeatherDetailsWidget(),
+                            SizedBox(height: 20),
+                            CustomTabBar(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

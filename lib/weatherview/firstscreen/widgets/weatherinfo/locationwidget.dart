@@ -20,13 +20,16 @@ class LocationWidget extends StatelessWidget {
         final city = parts.isNotEmpty ? parts[0] : '';
         final state = parts.length > 1 ? parts[1] : '';
 
+        final bool hasCity = city.isNotEmpty;
+        final bool hasState = state.isNotEmpty;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              city.isNotEmpty ? "$city," : '',
+              hasCity ? "$city," : "Enter your city",
               maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              overflow: TextOverflow.visible,
               style: const TextStyle(
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.w600,
@@ -34,9 +37,19 @@ class LocationWidget extends StatelessWidget {
                 color: Color(0xff313341),
               ),
             ),
-            if (state.isNotEmpty)
+            if (hasState)
               Text(
                 state,
+                style: const TextStyle(
+                  fontFamily: 'Inter',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 26,
+                  color: Color(0xff313341),
+                ),
+              ),
+            if (!hasCity) // When no city and no state
+              Text(
+                "Location",
                 style: const TextStyle(
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w600,
