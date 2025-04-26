@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart'; // Import Geolocator
-
+import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/weatherview/firstscreen/widgets/shared_prefences.dart';
 import 'package:weather_app/weatherview/firstscreen/widgets/tabbar/today_weather_controller.dart';
 
 class WeatherInfoController extends GetxController {
@@ -20,22 +20,34 @@ class WeatherInfoController extends GetxController {
 
   final String apiKey = '6fbcdad70318ecd7f0a756be6ff23b21';
 
+  // Keys for SharedPreferences
+  static const String _locationKey = 'saved_location';
+  static const String _latitudeKey = 'saved_latitude';
+  static const String _longitudeKey = 'saved_longitude';
+  static const String _weatherInfoKey = 'saved_weather_info';
+  static const String _weatherIconKey = 'saved_weather_icon';
+  static const String _humidityKey = 'saved_humidity';
+  static const String _windSpeedKey = 'saved_wind_speed';
+  static const String _rainfallKey = 'saved_rainfall';
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadSavedWeather();
+  }
+
   Future<void> getCurrentLocationAndWeather() async {
-    // Request permission for location
     LocationPermission permission = await Geolocator.requestPermission();
 
     if (permission == LocationPermission.always ||
         permission == LocationPermission.whileInUse) {
-      // Get current position (latitude and longitude)
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      // Update latitude and longitude
       this.latitude.value = position.latitude;
       this.longitude.value = position.longitude;
 
-      // Fetch city and state from lat and lon (you need a reverse geocoding API or method for this)
       String city = await getCityFromCoordinates(
         position.latitude,
         position.longitude,
@@ -45,13 +57,10 @@ class WeatherInfoController extends GetxController {
         position.longitude,
       );
 
-      // Update the location information
       updateLocation(city, state);
 
-      // Fetch weather based on current location
       await getWeather("", position.latitude, position.longitude);
     } else {
-      // Handle the case where permission is denied
       print("Location permission denied");
     }
   }
@@ -60,21 +69,16 @@ class WeatherInfoController extends GetxController {
     double latitude,
     double longitude,
   ) async {
-    // Use a reverse geocoding service to get the city from latitude and longitude
-    // Here, you can use a service like OpenWeather, Google Maps, etc.
-    // For simplicity, let's assume it's just a placeholder:
-    return "Current"; // Replace with actual reverse geocoding logic
+    return "Current";
   }
 
   Future<String> getStateFromCoordinates(
     double latitude,
     double longitude,
   ) async {
-    // Similar to getCityFromCoordinates, this will use reverse geocoding to fetch state
-    return "Location"; // Replace with actual reverse geocoding logic
+    return "Location";
   }
 
-  // Function to fetch weather data based on latitude and longitude
   Future<void> getWeather(String city, double lat, double lon) async {
     isWeatherLoading.value = true;
     final hourlyController = Get.find<HourlyWeatherController>();
@@ -104,6 +108,9 @@ class WeatherInfoController extends GetxController {
 
         weatherInfo.value = '$roundedTemp°C\n$description';
         weatherIconPath.value = iconPath;
+
+        // Save all updated weather data
+        await saveWeatherToPrefs();
       } else {
         weatherInfo.value = 'Failed to load weather data';
         weatherIconPath.value = '';
@@ -117,7 +124,6 @@ class WeatherInfoController extends GetxController {
     }
   }
 
-  // Function to get the appropriate weather icon for the description
   String getIconForDescription(String description) {
     description = description.toLowerCase();
 
@@ -143,8 +149,44 @@ class WeatherInfoController extends GetxController {
     }
   }
 
-  // Function to update the location based on city and state
   void updateLocation(String city, String state) {
     location.value = state.isNotEmpty ? '$city, $state' : city;
+  }
+
+  Future<void> saveWeatherToPrefs() async {
+    await LocalStorage.setString(_locationKey, location.value);
+    await LocalStorage.setDouble(_latitudeKey, latitude.value);
+    await LocalStorage.setDouble(_longitudeKey, longitude.value);
+    await LocalStorage.setString(_weatherInfoKey, weatherInfo.value);
+    await LocalStorage.setString(_weatherIconKey, weatherIconPath.value);
+    await LocalStorage.setDouble(_humidityKey, humidity.value);
+    await LocalStorage.setDouble(_windSpeedKey, windSpeed.value);
+    await LocalStorage.setDouble(_rainfallKey, rainfall.value);
+  }
+
+  Future<void> loadSavedWeather() async {
+    final savedLocation = LocalStorage.getString(_locationKey);
+    final savedLat = LocalStorage.getDouble(_latitudeKey);
+    final savedLon = LocalStorage.getDouble(_longitudeKey);
+    final savedWeatherInfo = LocalStorage.getString(_weatherInfoKey);
+    final savedWeatherIcon = LocalStorage.getString(_weatherIconKey);
+    final savedHumidity = LocalStorage.getDouble(_humidityKey);
+    final savedWindSpeed = LocalStorage.getDouble(_windSpeedKey);
+    final savedRainfall = LocalStorage.getDouble(_rainfallKey);
+
+    if (savedLocation != null &&
+        savedLat != null &&
+        savedLon != null &&
+        savedWeatherInfo != null &&
+        savedWeatherIcon != null) {
+      location.value = savedLocation;
+      latitude.value = savedLat;
+      longitude.value = savedLon;
+      weatherInfo.value = savedWeatherInfo;
+      weatherIconPath.value = savedWeatherIcon;
+      humidity.value = savedHumidity ?? 0.0;
+      windSpeed.value = savedWindSpeed ?? 0.0;
+      rainfall.value = savedRainfall ?? 0.0;
+    }
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_app/weatherview/firstscreen/Weather_view.dart';
+import 'package:weather_app/weatherview/firstscreen/widgets/shared_prefences.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await LocalStorage.initialize();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
