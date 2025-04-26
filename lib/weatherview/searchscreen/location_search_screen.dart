@@ -81,14 +81,11 @@ class LocationSearchScreen extends StatelessWidget {
                 Get.back();
               },
               icon: const Icon(Icons.my_location, color: Colors.white),
-              label: Obx(() {
-                return Text(
-                  weatherController.location.value.isEmpty
-                      ? "Fetching location..."
-                      : weatherController.location.value,
-                  style: const TextStyle(color: Colors.white),
-                );
-              }),
+              label: Text(
+                'Current location',
+                style: const TextStyle(color: Colors.white),
+              ),
+
               style: TextButton.styleFrom(foregroundColor: Colors.white),
             ),
 

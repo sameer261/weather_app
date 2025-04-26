@@ -63,7 +63,7 @@ class WeatherInfoController extends GetxController {
     // Use a reverse geocoding service to get the city from latitude and longitude
     // Here, you can use a service like OpenWeather, Google Maps, etc.
     // For simplicity, let's assume it's just a placeholder:
-    return "Sample City"; // Replace with actual reverse geocoding logic
+    return "Current"; // Replace with actual reverse geocoding logic
   }
 
   Future<String> getStateFromCoordinates(
@@ -71,7 +71,7 @@ class WeatherInfoController extends GetxController {
     double longitude,
   ) async {
     // Similar to getCityFromCoordinates, this will use reverse geocoding to fetch state
-    return "Sample State"; // Replace with actual reverse geocoding logic
+    return "Location"; // Replace with actual reverse geocoding logic
   }
 
   // Function to fetch weather data based on latitude and longitude
